@@ -12,14 +12,14 @@
 		The matrix will get displayed here on click of nodes
 
 </head>
-<button onclick="BFSutil(35,35)">Start bfs</button>
+<button onclick="BFSutil(47,47)">Start bfs</button>
 <!-- <button onclick="colour(40,40)">Change start node</button> -->
 <script type="text/javascript">
 	var startnode;    //To store the startnode of graph globally
 	var endnode;      //To store the endnode of graph globally
 	var matrix;       //Representing the screen with this final matrix.
-	var rows=35;
-	var cols=35;
+	var rows=47;
+	var cols=47;
 	var matrix = [];
 
 	docFrag = document.createDocumentFragment();
@@ -47,8 +47,8 @@
 	        elem.id = elem.id.concat(r2);			//Giving ids to all the cells by  concatenating with the corresponding number.
 		    
 
-		     elem.style.width = '40px';
-		     elem.style.height = '40px';
+		     elem.style.width = '30px';
+		     elem.style.height = '30px';
 		     elem.style.backgroundColor = 'white';
 		     elem.onclick = function() {click(this.id)};
 		     docFrag.appendChild(elem);
@@ -128,6 +128,7 @@ function BFS(grid,startNode)
 	    var res = startNode.split("a");
 	    var in1 = parseInt(res[0], 10);
 	    var in2 = Number(res[1]);
+	    visited[in1][in2] = 1;
         q.push(in1 + "," + in2);
 
         while (q.length != 0) 
@@ -239,10 +240,10 @@ function printmatrix(rows,cols)
 }
 
 
-	makerows(35,35);
+	makerows(47,47);
 	setStart(15,10);
 	setEnd(15,25);
-	makematrix(35,35);
+	makematrix(47,47);
 </script>
 <body>
 
