@@ -134,20 +134,26 @@ function BFS(grid,startNode)
         while (q.length != 0) 
         {
             let x = q.shift();
-            matrix_print.innerHTML = x;
             var res = x.split(",");
 		    var row = parseInt(res[0], 10);
 		    var col = Number(res[1]);
 		    if(grid[row][col] == 2)
 		    {
+		    	matrix_print.innerHTML = row+" "+col;
 		    	return;
 		    }
-
-		    explore_neighbour(row, col , q , visited, in1,in2,grid);
-		    
-
-            
+		    if(explore_neighbour(row, col , q , visited, in1,in2,grid) == 0)
+		    {
+				matrix_print.innerHTML = "path found";
+				return;
+		    }
+		    else
+		    {
+		    	matrix_print.innerHTML = "Unable to find a path";
+		    }
+		                
         }
+        
         function explore_neighbour(row, col , q , visited, in1,in2,grid)
         {
         	dr = [-1,1,0,0];
@@ -158,7 +164,7 @@ function BFS(grid,startNode)
         		cc = col+dc[i];
         		if(grid[rr][cc] == 2)
         		{
-        			return;
+        			return 0;
         		}
         		if(rr < 0 || cc < 0)
         		{
