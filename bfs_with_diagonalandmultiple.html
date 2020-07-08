@@ -343,14 +343,23 @@ function BFS(grid,startNode,endNode,num,color)
           {
             oj = true;
           } 
-    			if(grid[xcord][ycord]!=-1 && oj == false)
+    			if(grid[xcord][ycord]!=-1)
     			{
-              document.getElementById(c).style.background = 'black';
+            document.getElementById(c).style.background = 'black';
     			}
+          var ny = c.slice(4);
+          if(matrix[xcord][ycord] == 1)
+          {
+            document.getElementById(c).style.background = 'green';
+          }
+          if(matrix[xcord][ycord] == 2)
+          {
+            document.getElementById(c).style.background = 'red';
+          }
           var val = "CELL" + nodes[0];
           if(c == val)
           {
-            document.getElementById(c).style.background = 'blue';
+              document.getElementById(c).style.background = 'blue';
           }
     			
     			// if()
@@ -390,11 +399,16 @@ function BFS(grid,startNode,endNode,num,color)
 
     			map[rr+"," +cc].push(row+"," + col);   
 
-    			if(matrix[rr][cc]!=num && document.getElementById("CELL"+rr+"a"+cc).style.background != 'black')
+    			if(document.getElementById("CELL"+rr+"a"+cc).style.background != 'green' && document.getElementById("CELL"+rr+"a"+cc).style.background != 'blue' && document.getElementById("CELL"+rr+"a"+cc).style.background != 'red' && document.getElementById("CELL"+rr+"a"+cc).style.background != 'black')
     			{
     			    document.getElementById("CELL"+rr+"a"+cc).style.background = color;
 
     			}
+          var obc = "CELL"+rr+"a"+cc;
+          if(obc == startnode)
+          {
+            document.getElementById("CELL"+rr+"a"+cc).style.background = green;
+          }
     		}
     	}
 
@@ -425,7 +439,7 @@ function Clear(rows,cols)
 		var n = i.toString();
 		var a=j.toString();
 		var b=n+"a" +a;
-		if(b!=startnode && b!=endnode && matrix[i][j]!=-1)
+		if(matrix[i][j] == 0)
 		{
 	  		document.getElementById("CELL"+b).style.background = 'white';
 		}
