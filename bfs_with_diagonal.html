@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<docFrag>
+		
+	</docFrag>
+	<p id="printIDs">
+		Click on the buttons to get their IDs
+	</p>
+	<p id = matrix_print>
+		The matrix will get displayed here on click of nodes
+
+</head>
+<button onclick="BFSutil(35,35)">Start bfs</button>
+<button onclick="Clear(35,35)">Clear search</button>
+<button onclick="change_end(35,35)">Change End?</button>
+<button onclick="change_start()">Change Start?</button>
+<button onclick="setdiagonal()">Allow diagonal search?</button>
+<button onclick="add_end()">Add another end point?</button>
+<!-- <button onclick="colour(40,40)">Change start node</button> -->
+<script type="text/javascript">
+	var startnode;    //To store the startnode of graph globally
+	var endnode;      //To store the endnode of graph globally
+	var matrix;       //Representing the screen with this final matrix.
+	var rows=35;
+	var cols=35;
+	var matrix = [];
+  var allowdiagonal = false; 
+  var create_end= false;
+  var nodes = [];
+  var update_start = false;
+  var update_end = false;
+  var count_ends = 2
+
+	docFrag = document.createDocumentFragment();
+	var el_down = document.getElementById("printIDs");
+	var mat_display = document.getElementById("matrix_print");
+
+	function makerows(rows,cols)
+	{
+		var r;
+		var c; 
+
+		for(r=0; r<rows; r++)
+	    {
+	      for(c=0; c<cols; c++)
+	      {
+        
+		    var elem = document.createElement('input');
+		    elem.type = 'button';
+		    var c1=c.toString();
+	        var r1=r.toString();
+	        var r2= r1+"a" + c1;
+	        elem.id = "CELL";
+	        // elem.id = elem.id.concat(r1);
+
+	        elem.id = elem.id.concat(r2);			//Giving ids to all the cells by  concatenating with the corresponding number.
+		    
+
+		     elem.style.width = '40px';
+		     elem.style.height = '40px';
+		     elem.style.backgroundColor = 'white';
+		     elem.onclick = function() {click(this.id)};
+		     docFrag.appendChild(elem);
+		    }
+		 }
+
+		  //To add cells to the container
+		document.body.appendChild(docFrag);
+
+
+	}
+	function click(clicked) 
+	{ 
+    if(create_end == true)
+    {
+      document.getElementById(clicked).style.background = 'blue';
+      nodes.push(clicked.slice(4));
+      add_end_matrix(clicked);
+      create_end = false;
+    }
+    else if(update_start == true)
+    {
+      s2= startnode;
+      var cellnum1 = "CELL";
+      cellnum1 = cellnum1.concat(s2);
+      document.getElementById(clicked).style.background = 'green';
+      document.getElementById(cellnum1).style.background = 'white';
+      startnode = clicked.slice(4);
+      change_start_matrix(cellnum1,clicked);
+      update_start = false;
+    }
+    else if(update_end == true)
+    {
+      b2 = endnode;
+      var cellnum = "CELL";
+      cellnum = cellnum.concat(b2);
+      document.getElementById(clicked).style.background = 'red';
+      document.getElementById(cellnum).style.background = 'white';
+      endnode = clicked.slice(4);
+      change_end_matrix(cellnum,clicked);
+      update_end = false;
+    }
+    else
+    {
+      var res = clicked.split("a");
+      el_down.innerHTML = "ID = "+res[0] + res[1]; 
+      
+      ol = res[0].slice(4);
+      var in1 = parseInt(ol, 10);
+      var in2 = Number(res[1]);
+      if(matrix[in1][in2]==-1)
+      {
+        document.getElementById(clicked).style.background = 'white';
+        matrix[in1][in2]=0;
+      }
+
+      else
+      {
+        document.getElementById(clicked).style.background = 'grey';
+        matrix[in1][in2]=-1;
+      }
+    }
+		
+	   
+	    // BFS(matrix,startnode);
+
+	}
+
+function BFSutil(rows,cols)
+{
+  if(nodes.length > 0)
+  {
+    /*var val = 2;
+    for(var i = 0;i < nodes.length-1;i++)
+    {
+      if(i == 0)
+      {
+        BFS(matrix,startnode,nodes[i],3+i,'aqua');
+        BFS(matrix,nodes[i],nodes[i+1],3+i+1,'yellow');
+      }
+      elif(i == )
+      BFS(matrix,startnode,nodes[i],3,'aqua');
+      BFS(matrix,nodes[i],endnode,2,'yellow');
+    }
+    BFS(matrix,startnode,nodes[i],3,'aqua');
+    BFS(matrix,nodes[i],endnode,2,'yellow');*/
+    BFS(matrix,startnode,nodes[0],3,'aqua');
+    BFS(matrix,nodes[0],endnode,2,'yellow');
+  }
+  else
+  {
+    BFS(matrix,startnode,endnode,2,'aqua');
+  }
+  
+  	// mat_display.innerHTML = "Time " + dur +"ms";
+}
+
+
+function add_end_matrix(clicked)
+{
+  var op2 = clicked.slice(4);
+  op2 = op2.split("a");
+  var r_start_new2 = parseInt(op2[0], 10);
+  var r_end_new2 = Number(op2[1]);
+  count_ends = count_ends+1;
+  matrix[r_start_new2][r_end_new2] = count_ends;
+
+}
+
+function setStart(i,j)
+{
+	var n = i.toString();
+    var a=j.toString();
+    var b1=n+"a" +a;
+    startnode=b1;
+    var cellnum = "CELL";
+    cellnum = cellnum.concat(b1);
+    // startnode= cellnum;
+	document.getElementById(cellnum).style.background = 'green';
+	// document.getElementById(cellnum).draggable = true;
+	// document.getElementById(cellnum).ondragstart= "drag(event)"
+	 
+}
+function change_start_matrix(start_1,clicked)
+{
+  var sp = start_1.slice(4);
+  sp = sp.split("a");
+  var r_start = parseInt(sp[0], 10);
+  var r_end = Number(sp[1]);
+  matrix[r_start][r_end] = 0;
+
+  var op = clicked.slice(4);
+  op = op.split("a");
+  var r_start_new = parseInt(op[0], 10);
+  var r_end_new = Number(op[1]);
+  matrix[r_start_new][r_end_new] = 1;
+
+}
+
+function change_end_matrix(end_1,clicked)
+{
+  var sp1 = end_1.slice(4);
+  sp1 = sp1.split("a");
+  var r_start1 = parseInt(sp1[0], 10);
+  var r_end1 = Number(sp1[1]);
+  matrix[r_start1][r_end1] = 0;
+
+  var op1 = clicked.slice(4);
+  op1 = op1.split("a");
+  var r_start_new1 = parseInt(op1[0], 10);
+  var r_end_new1 = Number(op1[1]);
+  matrix[r_start_new1][r_end_new1] = 2;
+
+}
+
+
+function setdiagonal()
+{
+  if(allowdiagonal==false)
+  {
+      allowdiagonal=true;
+
+  }
+
+  else
+  {
+      allowdiagonal=false;
+
+  }
+}
+function add_end()
+{
+  if(create_end == false)
+  {
+    create_end = true;
+
+  }
+  else
+  {
+    create_end = false;
+  }
+}
+function change_start()
+{
+  if(update_start == false)
+  {
+    update_start = true;
+
+  }
+  else
+  {
+    update_start = false;
+  }
+}
+function change_end()
+{
+  if(update_end == false)
+  {
+    update_end = true;
+
+  }
+  else
+  {
+    update_end = false;
+  }
+}
+function setEnd(i2,j2)
+{
+	var n = i2.toString();
+    var a=j2.toString();
+    var b2=n+"a" +a;
+    endnode=b2;
+    var cellnum = "CELL";
+    cellnum = cellnum.concat(b2);
+    // endnode=cellnum;
+	document.getElementById(cellnum).style.background = 'red';
+}
+
+function BFS(grid,startNode,endNode,num,color) 
+{
+
+	let map= new Map();
+	// map[1 +"," +2] =[1,2];
+	// // map[1].push(1);
+
+	// matrix_print.innerHTML = map[1 +"," +2];
+    var h = rows;
+    var l = cols;
+
+    var visited = [];
+	for(var i=0; i<rows; i++)
+    {
+        visited[i] = new Array(cols);
+    }
+
+	for(var i=0; i<rows; i++) 
+    {
+      for(var j=0; j<cols; j++)
+      {
+      	visited[i][j] = 0;
+      }
+    }
+    var q = [];
+    var res = startNode.split("a");
+    var in1 = parseInt(res[0], 10);
+    var in2 = Number(res[1]);
+    visited[in1][in2] = 1;
+    q.push(in1 + "," + in2);
+    var flag=0;
+    map[in1+"," +in2]=[];
+    var maxk=4;
+    
+
+    while (flag!= 1) 
+    {
+        let x = q.shift();
+        var res = x.split(",");
+	    var row = parseInt(res[0], 10);
+	    var col = Number(res[1]);
+
+
+
+	    dr = [-1,1,0,0,-1,-1,1,1];
+    	dc = [0,0,-1,1,-1,1,-1,1];
+    	if(grid[row][col]==num)
+    	{
+    		flag=1;
+    		var arr = map[row+"," +col];
+
+    		// matrix_print.innerHTML = arr[0];
+    		for(var i=0; i < map[row+"," +col].length ;i++)
+    		{
+    			// matrix_print.innerHTML = map[row+"," +col];
+    		 	var z = arr[i];
+    			var b= z.split(",");
+    			var xcord=Number(b[0]);
+    			var ycord = Number(b[1]);
+    			var c="CELL"+b[0]+"a"+b[1];
+          var oj = false;
+          if(xcord == in1 && ycord == in2)
+          {
+            oj = true;
+          } 
+    			if(grid[xcord][ycord]!=-1 && oj == false)
+    			{
+              document.getElementById(c).style.background = 'black';
+    			}
+          var val = "CELL" + nodes[0];
+          if(c == val)
+          {
+            document.getElementById(c).style.background = 'blue';
+          }
+    			
+    			// if()
+
+    			
+    		}
+    		// matrix_print.innerHTML = map[row+"," +col];
+
+    		return ;
+    	}
+
+      if(allowdiagonal==true)
+      {
+        maxk=8;
+      }
+
+    	for(var k=0; k<maxk; k++)
+    	{
+	    
+    		rr = row+dr[k];
+     		cc = col+dc[k];
+     		// matrix_print.innerHTML = grid[rr][cc];
+    		if(issafe(rr,cc,visited,grid,rows,cols)==true)
+    		{
+    			q.push(rr+","+ cc);
+    			visited[rr][cc]=1;
+    			map[rr+"," +cc] = [];
+    			// var arr=[1,2,3];
+    			// map[rr+"," +cc] = arr.slice();
+    			// for(var i=0; i<map[row+","+col].length ; i++)
+    			// {
+    			// 	// map[rr+"," +cc].push(map[row+"," +col][i]);
+    			// }
+
+    			var arr = map[row+"," +col];
+    			map[rr+"," +cc] = arr.slice();
+
+    			map[rr+"," +cc].push(row+"," + col);   
+
+    			if(matrix[rr][cc]!=num && document.getElementById("CELL"+rr+"a"+cc).style.background != 'black')
+    			{
+    			    document.getElementById("CELL"+rr+"a"+cc).style.background = color;
+
+    			}
+    		}
+    	}
+
+	                
+    }
+
+    function issafe(i,j,visited,grid,rows,cols)
+    {
+    	if(i>=0 && j>=0 && i<rows && j<cols && visited[i][j]==0 && grid[i][j]!=-1)
+    	{
+    		// matrix_print.innerHTML = i+" " +j;
+    		return true;
+    	}
+
+    	return false;
+    }
+        
+
+}
+
+function Clear(rows,cols)
+{
+	for(var i=0; i<rows; i++) 
+    {
+      for(var j=0; j<cols; j++)
+      {
+
+		var n = i.toString();
+		var a=j.toString();
+		var b=n+"a" +a;
+		if(b!=startnode && b!=endnode && matrix[i][j]!=-1)
+		{
+	  		document.getElementById("CELL"+b).style.background = 'white';
+		}
+       
+       }
+    }
+
+}
+
+
+
+function makematrix(rows,cols)
+{ 
+    for(var i=0; i<rows; i++)
+    {
+        matrix[i] = new Array(cols);
+    }
+    for(var i=0; i<rows; i++) 
+    {
+      for(var j=0; j<cols; j++)
+      {
+
+          var n = i.toString();
+          var a=j.toString();
+          var b=n+"a" +a;
+          if(b==startnode)
+          {
+            matrix[i][j]=1;
+          }
+
+          else if(b==endnode)
+          {
+            matrix[i][j]=2;
+          }
+
+          else
+          {
+            matrix[i][j]=0;
+          }
+
+      }
+      
+    }
+}
+
+
+
+
+function printmatrix(rows,cols)
+{
+	 for(var i=0; i<rows; i++) 
+    {
+      for(var j=0; j<cols; j++)
+      {
+      	document.write(matrix[i][j]);
+      }
+ 	document.write("<br>");
+ 	}     
+}
+
+
+	makerows(35,35);
+	setStart(15,10);
+	setEnd(15,28);
+	makematrix(35,35);
+</script>
+<body>
+
+</body>
+</html>
