@@ -1,6 +1,6 @@
 # MS-FindingThePath
 
-Application can be run on this https://findingpath.herokuapp.com/
+Application can be found on https://findingpath.herokuapp.com/
 
 ### Explaination of the Code:
 
@@ -8,3 +8,7 @@ Application can be run on this https://findingpath.herokuapp.com/
 * Start node is denoted by green color and End node by red color.
 * One can add obstacles by clicking on the nodes of the grid. The obstacles are denoted by grey color.
 * Start and End node can be changed by options in the menu. 
+* There is an option to use diagonal movements while finding the path. 
+* Another node can be added by using option in the menu bar. The path then would be shortest path from start to new point and then new to end point. 
+
+
